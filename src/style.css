@@ -1,0 +1,28 @@
+#graph {
+  /* width: 1000px;
+  height: 800px; */
+  height: 800px;
+  border: 1px solid lightgray;
+}
+
+#jsonstr {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error {
+  color: red;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #graph {
+    height: 400px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}

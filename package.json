@@ -1,0 +1,35 @@
+{
+  "name": "mindmaps",
+  "version": "0.0.1",
+  "description": "Create mindmaps easily with graph based UI",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "webpack --watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juissi999/mindmaps.git"
+  },
+  "author": "",
+  "license": "AGPLv3",
+  "bugs": {
+    "url": "https://github.com/juissi999/mindmaps/issues"
+  },
+  "homepage": "https://github.com/juissi999/mindmaps#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "css-loader": "^5.2.1",
+    "juicycss": "0.0.7",
+    "style-loader": "^2.0.0",
+    "uuid": "^8.3.2",
+    "vis-data": "^7.1.2",
+    "vis-network": "^9.0.4",
+    "webpack": "^5.31.2",
+    "webpack-cli": "^4.6.0"
+  }
+}
