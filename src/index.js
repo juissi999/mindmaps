@@ -1,7 +1,9 @@
-import mindmapGraph from './mindmapGraph'
-import 'juicycss/index.css'
-import './style.css'
 import { v4 as uuidv4 } from 'uuid'
+import 'juicycss/index.css'
+
+import './style.css'
+import mindmapGraph from './mindmapGraph'
+import apiService from './apiService'
 
 const STYLES = {
   ROOTCOLOR: '#a8b6dd',
@@ -17,51 +19,9 @@ const STYLES = {
 
 const APPID = 'app'
 
-const mindMaps = [
-  {
-    id: uuidv4(),
-    nodes: [
-      {
-        id: '1df6aaf4-10cb-429f-9ff8-2fe0ac2d6287',
-        font: {
-          size: 20
-        },
-        label: 'Root',
-        color: '#dae0f1',
-        shape: 'circle'
-      },
-      {
-        id: 'ea8b4c30-ca37-4898-855f-ef9a82a88a34',
-        label: 'test',
-        shape: 'box',
-        color: '#dae0f1'
-      },
-      {
-        id: 'db987ff6-d3c0-4436-94ec-8ea99a19b798',
-        label: 'test2',
-        color: '#dae0f1',
-        shape: 'box' // 'ellipse' 'circle' 'box'
-      }
-    ],
-    edges: [
-      {
-        from: '1df6aaf4-10cb-429f-9ff8-2fe0ac2d6287',
-        to: 'ea8b4c30-ca37-4898-855f-ef9a82a88a34',
-        id: '4b9324aa-1875-4ef9-8045-2203273bdbb5',
-        value: 2
-      },
-      {
-        from: '1df6aaf4-10cb-429f-9ff8-2fe0ac2d6287',
-        to: 'db987ff6-d3c0-4436-94ec-8ea99a19b798',
-        id: '4b9a24aa-1875-4ef9-8045-2203273bdbb5',
-        value: 2
-      }
-    ]
-  }
-]
+let mindMaps = []
 
 let listElement = null
-let selectedMapElement = null
 let selectedMap = null
 let mindmap = null
 
@@ -105,36 +65,25 @@ const addNewMindMap = () => {
     ],
     edges: []
   })
-  renderList()
+  createMindMapList()
 }
-
-// const addNewNode = () => {
-//   const map = getCurrentMapObj()
-//   const newNode = {
-//     id: uuidv4(),
-//     color: '#C2FABC',
-//     shape: 'ellipse',
-//     label: "'Finland'"
-//   }
-//   // renderList()
-//   mindmap.addNode(newNode)
-//   map.nodes = mindmap.getNodes()
-// }
 
 const onMindmapUpdate = (data) => {
   const map = getCurrentMapObj()
 
   map.nodes = data.nodes
   map.edges = data.edges
+
+  apiService.saveMindmaps(mindMaps)
 }
 
 const selectMap = (id) => {
   selectedMap = id
-  renderList()
+  createMindMapList()
   refreshGraph()
 }
 
-const renderList = () => {
+const createMindMapList = () => {
   listElement.innerHTML = ''
   // `<div>${mm.id}</div>`).join("")
   mindMaps.forEach((mm) => {
@@ -155,11 +104,17 @@ window.addEventListener('load', () => {
   // define callback-functions for DOM-elements
   createLayout(APPID)
 
-  // load maps
-  renderList()
+  mindMaps = apiService.getMindmaps()
 
   // initial graph
   mindmap = new mindmapGraph('graph', [], [], onMindmapUpdate)
+
+  if (mindMaps.length > 0) {
+    selectedMap = mindMaps[0].id
+    refreshGraph()
+  }
+
+  createMindMapList()
 })
 
 const createLayout = (elId) => {
