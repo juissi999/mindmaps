@@ -75,6 +75,7 @@ const onMindmapUpdate = (data) => {
   map.edges = data.edges
 
   apiService.saveMindmaps(mindMaps)
+  createMindMapList()
 }
 
 const selectMap = (id) => {
@@ -89,9 +90,10 @@ const createMindMapList = () => {
   mindMaps.forEach((mm) => {
     const listEl = document.createElement('div')
     if (selectedMap === mm.id) {
-      listEl.innerHTML = `<b>${mm.id}</b>`
+      listEl.innerHTML = `<b>${mm.nodes[0].label}</b>`
     } else {
-      listEl.innerHTML = mm.id
+      // listEl.innerHTML = mm.id
+      listEl.innerHTML = mm.nodes[0].label
       listEl.appendChild(
         createButton('Select', 'jgreen', () => selectMap(mm.id))
       )
