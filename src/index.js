@@ -36,12 +36,11 @@ const refreshGraph = () => {
     const currentMapObj = getCurrentMapObj()
 
     if (!currentMapObj) {
-      return
+      mindmap.clear()
+    } else {
+      const { nodes, edges } = currentMapObj
+      mindmap.set(nodes, edges)
     }
-    const { nodes, edges } = currentMapObj
-
-    // render graph
-    mindmap.set(nodes, edges)
   } catch (error) {
     // something went wrong, create empty graph
     document.getElementById('statustxt').textContent = `${error}`
@@ -78,8 +77,22 @@ const onMindmapUpdate = (data) => {
   createMindMapList()
 }
 
-const selectMap = (id) => {
+const selectMindMap = (id) => {
   selectedMap = id
+  createMindMapList()
+  refreshGraph()
+}
+
+const deleteMindMap = (id) => {
+  mindMaps = mindMaps.filter((map) => map.id !== id)
+
+  if (mindMaps.length > 0) {
+    selectedMap = mindMaps[0].id
+  } else {
+    selectedMap = null
+  }
+
+  apiService.saveMindmaps(mindMaps)
   createMindMapList()
   refreshGraph()
 }
@@ -91,11 +104,14 @@ const createMindMapList = () => {
     const listEl = document.createElement('div')
     if (selectedMap === mm.id) {
       listEl.innerHTML = `<b>${mm.nodes[0].label}</b>`
+      listEl.appendChild(
+        createButton('delete', 'jred', () => deleteMindMap(mm.id))
+      )
     } else {
       // listEl.innerHTML = mm.id
       listEl.innerHTML = mm.nodes[0].label
       listEl.appendChild(
-        createButton('Select', 'jgreen', () => selectMap(mm.id))
+        createButton('Select', 'jgreen', () => selectMindMap(mm.id))
       )
     }
     listElement.appendChild(listEl)
