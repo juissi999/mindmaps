@@ -64,6 +64,7 @@ const addNewMindMap = () => {
     ],
     edges: []
   })
+  apiService.saveMindmaps(mindMaps)
   createMindMapList()
 }
 
