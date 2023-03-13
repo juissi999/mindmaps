@@ -317,7 +317,6 @@ class mindmapGraph {
       this.displayAndSelectInputTxtPopup()
     } else if (controlNode.type === 'editText') {
       this.inputTxtBox.value = clearTextFormatting(parentNode[0].label)
-      console.log(clearTextFormatting(parentNode[0].label))
       this.txtEditMode = 'edit'
       this.displayAndSelectInputTxtPopup()
     } else if (controlNode.type === 'deleteNode') {
