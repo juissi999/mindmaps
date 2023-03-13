@@ -2,18 +2,19 @@ import { Network } from 'vis-network'
 import { DataSet } from 'vis-data'
 import { v4 as uuidv4 } from 'uuid'
 
-import { createPopupBox, radialButtonLocations } from './utils.js'
+import { createPopupBox, radialButtonLocations, formatText } from './utils.js'
 
 const CONTROLTIMEOUT = 5000
 const NEWNODETXT = 'type your text'
+const CHARACTERS_IN_ROW = 20
 
 class mindmapGraph {
-  constructor(container, initialNodes, initialEdges, updateCallback) {
+  constructor(container, updateCallback) {
     this.updateCallback = updateCallback
     let options = {}
 
-    this.nodes = new DataSet(initialNodes)
-    this.edges = new DataSet(initialEdges)
+    this.nodes = new DataSet([])
+    this.edges = new DataSet([])
 
     this.controlNodes = []
     this.controlEdges = []
@@ -59,6 +60,13 @@ class mindmapGraph {
     const containerElement = document.getElementById(container)
     this.graph = new Network(containerElement, data, options).on('click', click)
 
+    const hideInputTxtPopup = () => {
+      this.popupBlock.setAttribute(
+        'style',
+        'display:none; position:absolute; background-color:#C2FABC; top:45%; left:27%; padding:20px;'
+      )
+    }
+
     const commitInputTxt = () => {
       const { originatorNodeX, originatorNodeY, color, parentNodeId } =
         this.editedNodeInformation
@@ -75,30 +83,22 @@ class mindmapGraph {
         )
       } else if (this.txtEditMode === 'edit') {
         const parentNode = this.findNode(parentNodeId)
-        parentNode[0].label = this.inputTxtBox.value
-        this.nodes.updateOnly(parentNode)
+        this.updateNodeLabel(parentNode[0], this.inputTxtBox.value)
       }
 
-      this.hideInputTxtPopup()
+      hideInputTxtPopup()
       this.updateCallback(this.getDataSet())
     }
 
     const { popupBlock, inputTxtBox } = createPopupBox(
       container,
       commitInputTxt,
-      this.hideInputTxtPopup
+      hideInputTxtPopup
     )
     this.popupBlock = popupBlock
     this.inputTxtBox = inputTxtBox
 
     this.editedNodeInformation = {}
-  }
-
-  hideInputTxtPopup() {
-    this.popupBlock.setAttribute(
-      'style',
-      'display:none; position:absolute; background-color:#C2FABC; top:45%; left:27%; padding:20px;'
-    )
   }
 
   displayAndSelectInputTxtPopup() {
@@ -132,8 +132,16 @@ class mindmapGraph {
     return { nodeId: newNodeId, edgeId: newEdgeId }
   }
 
+  updateNodeLabel(node, newLabel) {
+    node.label = formatText(newLabel, CHARACTERS_IN_ROW)
+    this.nodes.updateOnly(node)
+  }
+
   addNode(node) {
-    this.nodes.add(node)
+    this.nodes.add({
+      ...node,
+      label: formatText(node.label, CHARACTERS_IN_ROW)
+    })
   }
 
   addEdge(edge) {
@@ -150,13 +158,25 @@ class mindmapGraph {
   }
 
   set(nodes, edges) {
+    nodes = nodes.map((node) => {
+      return {
+        ...node,
+        label: formatText(node.label, CHARACTERS_IN_ROW)
+      }
+    })
+
     this.nodes = new DataSet(nodes)
     this.edges = new DataSet(edges)
     this.graph.setData({ nodes: this.nodes, edges: this.edges })
   }
 
   getDataSet() {
-    return { nodes: this.nodes.get(), edges: this.edges.get() }
+    return {
+      nodes: this.nodes.get().map((node) => {
+        return { ...node, label: node.label.split('\n').join() }
+      }),
+      edges: this.edges.get()
+    }
   }
 
   setupControlButtons(clickOriginatorNode, originatorNodeX, originatorNodeY) {

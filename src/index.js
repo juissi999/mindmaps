@@ -126,7 +126,7 @@ window.addEventListener('load', () => {
   mindMaps = apiService.getMindmaps()
 
   // initial graph
-  mindmap = new mindmapGraph('graph', [], [], onMindmapUpdate)
+  mindmap = new mindmapGraph('graph', onMindmapUpdate)
 
   if (mindMaps.length > 0) {
     selectedMap = mindMaps[0].id

@@ -72,4 +72,22 @@ const radialButtonLocations = [
   }
 ]
 
-export { createPopupBox, radialButtonLocations }
+const formatText = (rawTxt, CHARACTERS_IN_ROW) => {
+  let words = rawTxt.split(' ')
+
+  words = words.reverse()
+
+  const textRows = []
+
+  while (0 < words.length) {
+    let newLine = ''
+    while (newLine.length < CHARACTERS_IN_ROW && 0 < words.length) {
+      newLine = newLine + ' ' + words.pop()
+    }
+    textRows.push(newLine)
+  }
+
+  return textRows.join('\n')
+}
+
+export { createPopupBox, radialButtonLocations, formatText }
