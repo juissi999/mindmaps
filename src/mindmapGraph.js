@@ -2,7 +2,12 @@ import { Network } from 'vis-network'
 import { DataSet } from 'vis-data'
 import { v4 as uuidv4 } from 'uuid'
 
-import { createPopupBox, radialButtonLocations, formatText } from './utils.js'
+import {
+  createPopupBox,
+  radialButtonLocations,
+  formatText,
+  clearTextFormatting
+} from './utils.js'
 
 const CONTROLTIMEOUT = 5000
 const NEWNODETXT = 'type your text'
@@ -173,7 +178,7 @@ class mindmapGraph {
   getDataSet() {
     return {
       nodes: this.nodes.get().map((node) => {
-        return { ...node, label: node.label.split('\n').join() }
+        return { ...node, label: clearTextFormatting(node.label) }
       }),
       edges: this.edges.get()
     }
@@ -311,7 +316,8 @@ class mindmapGraph {
       this.txtEditMode = 'new'
       this.displayAndSelectInputTxtPopup()
     } else if (controlNode.type === 'editText') {
-      this.inputTxtBox.value = parentNode[0].label
+      this.inputTxtBox.value = clearTextFormatting(parentNode[0].label)
+      console.log(clearTextFormatting(parentNode[0].label))
       this.txtEditMode = 'edit'
       this.displayAndSelectInputTxtPopup()
     } else if (controlNode.type === 'deleteNode') {

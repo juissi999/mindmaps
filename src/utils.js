@@ -90,4 +90,13 @@ const formatText = (rawTxt, CHARACTERS_IN_ROW) => {
   return textRows.join('\n')
 }
 
-export { createPopupBox, radialButtonLocations, formatText }
+const clearTextFormatting = (txt) => {
+  return txt.trim().split('\n').join('')
+}
+
+export {
+  createPopupBox,
+  radialButtonLocations,
+  formatText,
+  clearTextFormatting
+}
