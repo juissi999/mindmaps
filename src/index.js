@@ -171,7 +171,7 @@ const createLayout = (elId) => {
 
   const block6 = document.createElement('div')
   block6.setAttribute('class', 'my-2')
-  block6.innerHTML = `<a href="https://github.com/juissi999/jsonviz">juissi999@github</a>`
+  block6.innerHTML = `<a href="https://github.com/juissi999/mindmaps">juissi999@github</a>`
   container.appendChild(block6)
 
   app.appendChild(container)
